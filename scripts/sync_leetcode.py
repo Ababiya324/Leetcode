@@ -29,15 +29,25 @@ def fetch_submissions():
     offset, limit = 0, 20
     while True:
         url = f"https://leetcode.com/api/submissions/?offset={offset}&limit={limit}"
-        r = session.get(url, timeout=30)
-        r.raise_for_status()
+        for attempt in range(5):
+            r = session.get(url, timeout=30)
+            if r.status_code in (403, 429):
+                wait = 5 * (attempt + 1)
+                print(f"rate limited at offset {offset}, waiting {wait}s")
+                time.sleep(wait)
+                continue
+            r.raise_for_status()
+            break
+        else:
+            print(f"giving up at offset {offset} after repeated rate limits")
+            return
         data = r.json()
         for sub in data.get("submissions_dump", []):
             yield sub
         if not data.get("has_next"):
             break
         offset += limit
-        time.sleep(1)
+        time.sleep(2)
 
 def main():
     seen = set()
