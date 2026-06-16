@@ -49,6 +49,7 @@ def fetch_submissions():
         offset += limit
         time.sleep(2)
 
+
 def main():
     seen = set()
     updated = 0
