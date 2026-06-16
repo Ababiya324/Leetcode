@@ -5,6 +5,7 @@ import requests
 SESSION = os.environ["LEETCODE_SESSION"]
 CSRF = os.environ["LEETCODE_CSRF_TOKEN"]
 DEST = os.environ.get("DESTINATION_FOLDER", "solutions")
+FULL_SCAN = os.environ.get("FULL_SCAN", "") == "1"
 
 EXT = {
     "python": "py", "python3": "py", "c": "c", "cpp": "cpp",
@@ -53,6 +54,7 @@ def fetch_submissions():
 def main():
     seen = set()
     updated = 0
+    streak = 0
     for sub in fetch_submissions():
         if sub.get("status_display") != "Accepted":
             continue
@@ -63,7 +65,6 @@ def main():
 
         ext = EXT.get(sub.get("lang", ""), "txt")
         folder = os.path.join(DEST, slug)
-        os.makedirs(folder, exist_ok=True)
         path = os.path.join(folder, f"solution.{ext}")
         code = sub.get("code", "")
 
@@ -71,11 +72,20 @@ def main():
         if os.path.exists(path):
             with open(path, encoding="utf-8") as f:
                 existing = f.read()
-        if existing != code:
-            with open(path, "w", encoding="utf-8") as f:
-                f.write(code)
-            updated += 1
-            print(f"synced {slug} ({sub.get('lang')})")
+
+        if existing == code:
+            streak += 1
+            if not FULL_SCAN and streak >= 5:
+                print("reached already-synced solutions, stopping early")
+                break
+            continue
+
+        streak = 0
+        os.makedirs(folder, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(code)
+        updated += 1
+        print(f"synced {slug} ({sub.get('lang')})")
 
     print(f"done: {updated} file(s) updated, {len(seen)} problem(s) seen")
 
