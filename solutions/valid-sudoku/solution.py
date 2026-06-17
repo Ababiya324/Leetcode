@@ -33,4 +33,4 @@ class Solution(object):
                         if board[a][b] in s:
                             return False
                         s.append(board[a][b])        
-        return True
+        return True #slow
