@@ -14,4 +14,4 @@ Insert `()` at each:
 
 So from `()` you get `()()` and `(())`, the two valid 2-pair strings.
 
-Why every gap and not just some: every valid n-pair string has at least one `()` inside it. Delete that `()` and you get a valid (n−1)-pair string. Running this backward, every n-pair answer must come from inserting `()` somewhere into an (n−1)-pair answer, and that "somewhere" can be any gap, so you try them all and let the set kill repeats.
+Why every gap and not just some: every valid n-pair string has at least one `()` inside it. Delete that `()` and you get a valid (n−1)-pair string. Running this backward, every n-pair answer must come from inserting `()` somewhere into an (n−1)-pair answer, and that "somewhere" can be any gap, so you try them all.
