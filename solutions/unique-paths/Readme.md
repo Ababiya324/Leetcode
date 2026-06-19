@@ -1,5 +1,3 @@
-Here is a concise description you can use for your `README.md`:
-
 ### Unique Paths (Combinatorics Approach)
 
 Finds the total number of unique paths from the top-left corner to the bottom-right corner of an $m \times n$ grid. Since the robot must make exactly $m - 1$ downward moves and $n - 1$ rightward moves regardless of the path, the problem reduces to calculating the combinations (binomial coefficient) of these moves.
